@@ -1,10 +1,19 @@
+import {render, screen} from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import {FavoriteNumber} from 'favorite-number'
 import * as React from 'react'
-import ReactDOM from 'react-dom'
-import {FavoriteNumber} from '../favorite-number'
 
-test('renders a number input with a label "Favorite Number"', () => {
-  const div = document.createElement('div')
-  ReactDOM.render(<FavoriteNumber />, div)
-  expect(div.querySelector('input')).toHaveAttribute('type', 'number')
-  expect(div.querySelector('label')).toHaveTextContent('Favorite Number')
+test('renders a number input with a label "Favorite number"', () => {
+  const {debug, rerender} = render(<FavoriteNumber />)
+  const input = screen.getByLabelText(/favorite number/i)
+  expect(input).toHaveAttribute('type', 'number')
+})
+
+test('entering an invalid value shows an error message', () => {
+  const {rerender} = render(<FavoriteNumber />)
+  const input = screen.getByLabelText(/favorite number/i)
+  userEvent.type(input, '10')
+  expect(screen.getByRole('alert')).toHaveTextContent('The number is invalid')
+  rerender(<FavoriteNumber max={10} />)
+  expect(screen.queryByRole('alert')).toBeNull()
 })
