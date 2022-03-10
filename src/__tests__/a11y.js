@@ -21,6 +21,7 @@ function AccessibleForm() {
 
 test('the form is accessible', async () => {
   const {debug, container} = render(<InaccessibleForm />)
+  debug()
   const results = await axe(container)
   expect(results).toHaveNoViolations()
 })
